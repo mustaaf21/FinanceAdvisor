@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinanceAdvisor.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260331112113_AddUserSessions")]
-    partial class AddUserSessions
+    [Migration("20260331153651_CreateUserSessionsTable")]
+    partial class CreateUserSessionsTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -500,6 +500,37 @@ namespace FinanceAdvisor.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("FinanceAdvisor.Domain.Entities.UserSession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastActivityAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SessionToken")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserSessions");
+                });
+
             modelBuilder.Entity("FinanceAdvisor.Domain.Entities.Transaction", b =>
                 {
                     b.HasOne("FinanceAdvisor.Domain.Entities.User", "User")
@@ -511,8 +542,21 @@ namespace FinanceAdvisor.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FinanceAdvisor.Domain.Entities.UserSession", b =>
+                {
+                    b.HasOne("FinanceAdvisor.Domain.Entities.User", "User")
+                        .WithMany("Sessions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FinanceAdvisor.Domain.Entities.User", b =>
                 {
+                    b.Navigation("Sessions");
+
                     b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
