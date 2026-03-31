@@ -17,9 +17,7 @@ api.interceptors.response.use(
   res => res,
   err => {
     if (err.response?.status === 401) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-      window.location.href = '/login'
+      console.error("Unauthorized request", err.config.url)
     }
     return Promise.reject(err)
   }
