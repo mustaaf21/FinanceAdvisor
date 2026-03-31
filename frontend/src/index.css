@@ -22,3 +22,16 @@
     @apply bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full;
   }
 }
+
+@layer utilities {
+
+  /* Hide scrollbar but keep scroll behaviour — used for horizontal suggestion chips */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

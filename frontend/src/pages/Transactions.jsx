@@ -58,21 +58,22 @@ export default function Transactions() {
   }
 
   return (
-    <div className="p-8 space-y-6">
+    <div className="p-4 md:p-8 space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Transactions</h1>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-xl md:text-2xl font-bold text-white">Transactions</h1>
           <p className="text-gray-400 text-sm mt-1">{transactions.length} transactions total</p>
         </div>
-        <div className="flex gap-2">
-          <button onClick={load} className="btn-secondary flex items-center gap-2">
-            <RefreshCw size={15} />
-            Refresh
+        {/* Buttons — stack vertically on very small screens */}
+        <div className="flex flex-col xs:flex-row gap-2 shrink-0">
+          <button onClick={load} className="btn-secondary flex items-center justify-center gap-2 text-sm px-3 py-2">
+            <RefreshCw size={14} />
+            <span className="hidden sm:inline">Refresh</span>
           </button>
-          <button onClick={() => setShowForm(v => !v)} className="btn-primary flex items-center gap-2">
-            <Plus size={15} />
-            Add Transaction
+          <button onClick={() => setShowForm(v => !v)} className="btn-primary flex items-center justify-center gap-2 text-sm px-3 py-2">
+            <Plus size={14} />
+            <span>Add</span>
           </button>
         </div>
       </div>
@@ -87,7 +88,8 @@ export default function Transactions() {
             <X size={18} />
           </button>
           <h2 className="text-sm font-semibold text-white mb-4">New Transaction</h2>
-          <form onSubmit={handleAdd} className="grid grid-cols-2 gap-4">
+          {/* Single column on mobile, two columns on sm+ */}
+          <form onSubmit={handleAdd} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-gray-400 mb-1.5">Amount (₹)</label>
               <input
@@ -132,7 +134,7 @@ export default function Transactions() {
                 required
               />
             </div>
-            <div className="col-span-2 flex items-center gap-3">
+            <div className="sm:col-span-2 flex items-center gap-3">
               <input
                 type="checkbox"
                 id="recurring"
@@ -142,17 +144,17 @@ export default function Transactions() {
               />
               <label htmlFor="recurring" className="text-sm text-gray-400">Recurring transaction</label>
             </div>
-            <div className="col-span-2 flex justify-end gap-2">
+            <div className="sm:col-span-2 flex justify-end gap-2">
               <button type="button" onClick={() => setShowForm(false)} className="btn-secondary">Cancel</button>
               <button type="submit" disabled={submitting} className="btn-primary disabled:opacity-50">
-                {submitting ? 'Saving...' : 'Save Transaction'}
+                {submitting ? 'Saving...' : 'Save'}
               </button>
             </div>
           </form>
         </div>
       )}
 
-      {/* Transactions Table */}
+      {/* Transactions list */}
       <div className="card p-0 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
@@ -163,41 +165,69 @@ export default function Transactions() {
             No transactions yet. Add your first one above.
           </div>
         ) : (
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gray-800">
-                <th className="text-left text-xs text-gray-500 font-medium px-6 py-3">Date</th>
-                <th className="text-left text-xs text-gray-500 font-medium px-6 py-3">Description</th>
-                <th className="text-left text-xs text-gray-500 font-medium px-6 py-3">Category</th>
-                <th className="text-right text-xs text-gray-500 font-medium px-6 py-3">Amount</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-800/50">
-              {transactions.map(t => (
-                <tr key={t.id} className="hover:bg-gray-800/30 transition-colors">
-                  <td className="px-6 py-3.5 text-gray-400 text-xs">
-                    {new Date(t.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                  </td>
-                  <td className="px-6 py-3.5 text-gray-200">
-                    {t.description}
-                    {t.isRecurring && (
-                      <span className="ml-2 text-xs bg-gray-800 text-gray-500 px-1.5 py-0.5 rounded">
-                        recurring
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-6 py-3.5">
-                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${CategoryColors[t.category] ?? CategoryColors.Other}`}>
-                      {t.category}
-                    </span>
-                  </td>
-                  <td className="px-6 py-3.5 text-right font-medium text-white">
-                    ₹{t.amount.toLocaleString('en-IN')}
-                  </td>
+          <>
+            {/* Desktop table — hidden on mobile */}
+            <table className="w-full text-sm hidden md:table">
+              <thead>
+                <tr className="border-b border-gray-800">
+                  <th className="text-left text-xs text-gray-500 font-medium px-6 py-3">Date</th>
+                  <th className="text-left text-xs text-gray-500 font-medium px-6 py-3">Description</th>
+                  <th className="text-left text-xs text-gray-500 font-medium px-6 py-3">Category</th>
+                  <th className="text-right text-xs text-gray-500 font-medium px-6 py-3">Amount</th>
                 </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-800/50">
+                {transactions.map(t => (
+                  <tr key={t.id} className="hover:bg-gray-800/30 transition-colors">
+                    <td className="px-6 py-3.5 text-gray-400 text-xs">
+                      {new Date(t.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </td>
+                    <td className="px-6 py-3.5 text-gray-200">
+                      {t.description}
+                      {t.isRecurring && (
+                        <span className="ml-2 text-xs bg-gray-800 text-gray-500 px-1.5 py-0.5 rounded">
+                          recurring
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-3.5">
+                      <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${CategoryColors[t.category] ?? CategoryColors.Other}`}>
+                        {t.category}
+                      </span>
+                    </td>
+                    <td className="px-6 py-3.5 text-right font-medium text-white">
+                      ₹{t.amount.toLocaleString('en-IN')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Mobile card list — hidden on desktop */}
+            <div className="divide-y divide-gray-800/50 md:hidden">
+              {transactions.map(t => (
+                <div key={t.id} className="px-4 py-3.5 flex items-center justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full shrink-0 ${CategoryColors[t.category] ?? CategoryColors.Other}`}>
+                        {t.category}
+                      </span>
+                      {t.isRecurring && (
+                        <span className="text-xs bg-gray-800 text-gray-500 px-1.5 py-0.5 rounded">recurring</span>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-200 truncate">{t.description}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      {new Date(t.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </p>
+                  </div>
+                  <span className="font-semibold text-white text-sm shrink-0">
+                    ₹{t.amount.toLocaleString('en-IN')}
+                  </span>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
     </div>
