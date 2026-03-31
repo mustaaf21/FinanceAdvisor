@@ -5,7 +5,6 @@ import { Send, Bot, User, Sparkles } from 'lucide-react'
 const SUGGESTED = [
   'Where am I overspending this month?',
   'How does my spending compare to last month?',
-  'Which category should I cut down on?',
   'Am I likely to exceed my budget?',
   'What are my top 3 spending areas?'
 ]
@@ -32,12 +31,24 @@ export default function Chat() {
     if (!question.trim() || loading) return
 
     const userMsg = { role: 'user', content: question }
-    setMessages(m => [...m, userMsg])
+
+    // Build history INCLUDING this new message
+    const updatedMessages = [...messages, userMsg]
+
+    // Only send role + content (no alerts) with limit to prevent token overload
+    const history = updatedMessages
+      .slice(-10)
+      .map(m => ({
+        role: m.role,
+        content: m.content
+      }))
+
+    setMessages(updatedMessages)
     setInput('')
     setLoading(true)
 
     try {
-      const res = await agentApi.query(question)
+      const res = await agentApi.query(question, history)
       const { answer, alerts } = res.data
       setMessages(m => [...m, { role: 'assistant', content: answer, alerts }])
     } catch {
@@ -90,8 +101,8 @@ export default function Chat() {
               style={{ maxWidth: 'min(85%, 480px)' }}>
               {/* Bubble */}
               <div className={`rounded-2xl px-3 py-2.5 md:px-4 md:py-3 text-sm leading-relaxed break-words ${msg.role === 'assistant'
-                  ? 'bg-gray-900 border border-gray-800 text-gray-200 rounded-tl-sm'
-                  : 'bg-blue-600 text-white rounded-tr-sm'
+                ? 'bg-gray-900 border border-gray-800 text-gray-200 rounded-tl-sm'
+                : 'bg-blue-600 text-white rounded-tr-sm'
                 }`}>
                 {msg.content}
               </div>

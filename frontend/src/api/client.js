@@ -42,7 +42,7 @@ export const insightsApi = {
 }
 
 export const agentApi = {
-  query: (question) => api.post('/agent/query', { question })
+  query: (question) => api.post('/agent/query', { question, history })
 }
 
 export default api
