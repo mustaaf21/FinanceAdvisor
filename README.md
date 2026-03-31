@@ -1,6 +1,3 @@
-Here’s a **clean, professional, recruiter-ready README** for your project — you can paste this directly into your `README.md` 👇
-
----
 
 # 🚀 Finance Advisor — AI-Powered Personal Finance System
 
