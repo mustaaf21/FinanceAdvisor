@@ -8,4 +8,5 @@ public class User
     public string FullName { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+    public ICollection<UserSession> Sessions { get; set; } = new List<UserSession>();
 }

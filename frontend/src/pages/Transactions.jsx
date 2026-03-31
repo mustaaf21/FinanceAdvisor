@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { transactionsApi } from '../api/client'
-import { Plus, X, RefreshCw } from 'lucide-react'
+import { Plus, X, RefreshCw, Edit2 } from 'lucide-react'
 
 const CATEGORIES = ['Food', 'Transport', 'Entertainment', 'Utilities', 'Healthcare', 'Shopping', 'Other']
 
@@ -28,6 +28,7 @@ export default function Transactions() {
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState(defaultForm)
   const [submitting, setSubmitting] = useState(false)
+  const [editingId, setEditingId] = useState(null)
 
   const load = () => {
     setLoading(true)
@@ -55,6 +56,44 @@ export default function Transactions() {
     } finally {
       setSubmitting(false)
     }
+  }
+
+  const handleEdit = (transaction) => {
+    setEditingId(transaction.id)
+    setForm({
+      amount: transaction.amount.toString(),
+      category: transaction.category,
+      description: transaction.description,
+      date: new Date(transaction.date).toISOString().split('T')[0],
+      isRecurring: transaction.isRecurring
+    })
+    setShowForm(true)
+  }
+
+  const handleUpdate = async (e) => {
+    e.preventDefault()
+    setSubmitting(true)
+    try {
+      await transactionsApi.update(editingId, {
+        ...form,
+        amount: parseFloat(form.amount),
+        date: new Date(form.date).toISOString()
+      })
+      setForm(defaultForm)
+      setShowForm(false)
+      setEditingId(null)
+      load()
+    } catch {
+      alert('Failed to update transaction')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const handleCancel = () => {
+    setShowForm(false)
+    setEditingId(null)
+    setForm(defaultForm)
   }
 
   return (
@@ -87,9 +126,9 @@ export default function Transactions() {
           >
             <X size={18} />
           </button>
-          <h2 className="text-sm font-semibold text-white mb-4">New Transaction</h2>
+          <h2 className="text-sm font-semibold text-white mb-4">{editingId ? 'Edit Transaction' : 'New Transaction'}</h2>
           {/* Single column on mobile, two columns on sm+ */}
-          <form onSubmit={handleAdd} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <form onSubmit={editingId ? handleUpdate : handleAdd} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-gray-400 mb-1.5">Amount (₹)</label>
               <input
@@ -145,9 +184,9 @@ export default function Transactions() {
               <label htmlFor="recurring" className="text-sm text-gray-400">Recurring transaction</label>
             </div>
             <div className="sm:col-span-2 flex justify-end gap-2">
-              <button type="button" onClick={() => setShowForm(false)} className="btn-secondary">Cancel</button>
+              <button type="button" onClick={handleCancel} className="btn-secondary">Cancel</button>
               <button type="submit" disabled={submitting} className="btn-primary disabled:opacity-50">
-                {submitting ? 'Saving...' : 'Save'}
+                {submitting ? 'Saving...' : (editingId ? 'Update' : 'Save')}
               </button>
             </div>
           </form>
@@ -174,6 +213,7 @@ export default function Transactions() {
                   <th className="text-left text-xs text-gray-500 font-medium px-6 py-3">Description</th>
                   <th className="text-left text-xs text-gray-500 font-medium px-6 py-3">Category</th>
                   <th className="text-right text-xs text-gray-500 font-medium px-6 py-3">Amount</th>
+                  <th className="text-right text-xs text-gray-500 font-medium px-6 py-3">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800/50">
@@ -198,6 +238,15 @@ export default function Transactions() {
                     <td className="px-6 py-3.5 text-right font-medium text-white">
                       ₹{t.amount.toLocaleString('en-IN')}
                     </td>
+                    <td className="px-6 py-3.5 text-right">
+                      <button
+                        onClick={() => handleEdit(t)}
+                        className="text-blue-400 hover:text-blue-300 transition-colors"
+                        title="Edit transaction"
+                      >
+                        <Edit2 size={16} />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -221,9 +270,18 @@ export default function Transactions() {
                       {new Date(t.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                     </p>
                   </div>
-                  <span className="font-semibold text-white text-sm shrink-0">
-                    ₹{t.amount.toLocaleString('en-IN')}
-                  </span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="font-semibold text-white text-sm">
+                      ₹{t.amount.toLocaleString('en-IN')}
+                    </span>
+                    <button
+                      onClick={() => handleEdit(t)}
+                      className="text-blue-400 hover:text-blue-300 transition-colors p-1"
+                      title="Edit"
+                    >
+                      <Edit2 size={16} />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

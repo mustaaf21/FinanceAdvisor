@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Transaction> Transactions => Set<Transaction>();
+    public DbSet<UserSession> UserSessions => Set<UserSession>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,6 +24,11 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Transaction>()
             .Property(t => t.Amount)
             .HasPrecision(18, 2);
+
+        modelBuilder.Entity<UserSession>()
+            .HasOne(s => s.User)
+            .WithMany(u => u.Sessions)
+            .HasForeignKey(s => s.UserId);
 
         var hash = HashPassword("Your_password");
 

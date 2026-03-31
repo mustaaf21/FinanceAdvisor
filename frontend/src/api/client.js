@@ -26,12 +26,17 @@ api.interceptors.response.use(
 )
 
 export const authApi = {
-  login: (email, password) => api.post('/auth/login', { email, password })
+  login: (email, password, forceLogoutOthers = false) => api.post('/auth/login', { email, password, forceLogoutOthers }),
+  checkSession: (email) => api.post('/auth/check-session', { email }),
+  logoutSession: (sessionId) => api.post(`/auth/logout-session?sessionId=${sessionId}`)
 }
 
 export const transactionsApi = {
   getAll: () => api.get('/transactions'),
-  add: (data) => api.post('/transactions', data)
+  add: (data) => api.post('/transactions', data),
+  update: (id, data) => api.put(`/transactions/${id}`, data),
+  getLatest: () => api.get('/transactions/latest'),
+  getByAmount: (minAmount, maxAmount) => api.get('/transactions/by-amount', { params: { minAmount, maxAmount } })
 }
 
 export const insightsApi = {

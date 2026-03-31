@@ -1,4 +1,6 @@
 using System.Text.Json;
+using System.Text.RegularExpressions;
+using FinanceAdvisor.Application.DTOs;
 using FinanceAdvisor.Application.Interfaces;
 using FinanceAdvisor.Application.Models;
 using FinanceAdvisor.Infrastructure.External;
@@ -17,7 +19,8 @@ public class AIService : IAIService
     public async Task<string> QueryAsync(
         string userQuestion,
         InsightsSummary insights,
-        List<RuleAlert> alerts)
+        List<RuleAlert> alerts,
+        List<TransactionDto> recentTransactions)
     {
         // Key architectural decision: LLM receives ONLY validated structured JSON
         // It never accesses raw transactions or the database directly
@@ -29,7 +32,15 @@ public class AIService : IAIService
             total_spent_this_month = insights.TotalThisMonth,
             total_spent_last_month = insights.TotalLastMonth,
             highest_spend_category = insights.TopCategory,
-            active_alerts = alerts.Select(a => new { a.Category, a.Message, severity = a.Severity.ToString() })
+            active_alerts = alerts.Select(a => new { a.Category, a.Message, severity = a.Severity.ToString() }),
+            recent_transactions = recentTransactions.Take(10).Select(t => new 
+            {
+                amount = t.Amount,
+                category = t.Category,
+                description = t.Description,
+                date = t.Date.ToString("yyyy-MM-dd"),
+                is_recurring = t.IsRecurring
+            })
         }, new JsonSerializerOptions { WriteIndented = true });
 
         var prompt = $"""
@@ -42,6 +53,9 @@ public class AIService : IAIService
             - Be specific, actionable, and concise (3-5 sentences max)
             - Currency is Indian Rupees (₹)
             - If alerts exist, acknowledge them in your response
+            - The data includes recent transactions with amounts, categories, descriptions, and dates
+            - You can answer questions about latest transactions, specific amounts, and filtering
+            - When showing transaction details, format them clearly with amount, category, and description
             
             USER SPENDING DATA:
             {context}

@@ -34,6 +34,39 @@ public class TransactionsController : ControllerBase
         return CreatedAtAction(nameof(GetAll), result);
     }
 
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateTransactionRequest request)
+    {
+        var userId = GetUserId();
+        try
+        {
+            var result = await _transactions.UpdateAsync(userId, id, request);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("latest")]
+    public async Task<IActionResult> GetLatest()
+    {
+        var userId = GetUserId();
+        var result = await _transactions.GetLatestAsync(userId);
+        if (result == null)
+            return NotFound(new { message = "No transactions found" });
+        return Ok(result);
+    }
+
+    [HttpGet("by-amount")]
+    public async Task<IActionResult> GetByAmount([FromQuery] decimal minAmount, [FromQuery] decimal? maxAmount = null)
+    {
+        var userId = GetUserId();
+        var result = await _transactions.GetByAmountRangeAsync(userId, minAmount, maxAmount);
+        return Ok(result);
+    }
+
     private int GetUserId() =>
         int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 }

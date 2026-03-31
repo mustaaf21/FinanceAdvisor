@@ -24,4 +24,18 @@ public class AuthController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost("check-session")]
+    public async Task<IActionResult> CheckSession([FromBody] SessionCheckRequest request)
+    {
+        var result = await _auth.CheckActiveSessionAsync(request.Email);
+        return Ok(result);
+    }
+
+    [HttpPost("logout-session")]
+    public async Task<IActionResult> LogoutSession([FromQuery] string sessionId)
+    {
+        await _auth.LogoutSessionAsync(sessionId);
+        return Ok(new { message = "Session logged out successfully" });
+    }
 }

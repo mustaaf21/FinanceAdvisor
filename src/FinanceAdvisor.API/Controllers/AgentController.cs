@@ -14,15 +14,18 @@ public class AgentController : ControllerBase
     private readonly IInsightsService _insights;
     private readonly IRulesEngineService _rules;
     private readonly IAIService _ai;
+    private readonly ITransactionService _transactions;
 
     public AgentController(
         IInsightsService insights,
         IRulesEngineService rules,
-        IAIService ai)
+        IAIService ai,
+        ITransactionService transactions)
     {
         _insights = insights;
         _rules = rules;
         _ai = ai;
+        _transactions = transactions;
     }
 
     /// <summary>
@@ -41,9 +44,10 @@ public class AgentController : ControllerBase
         // === AGENT 1: Data Processor (deterministic, no LLM) ===
         var summary = await _insights.GetSummaryAsync(userId);
         var alerts = _rules.Evaluate(summary);
+        var recentTransactions = await _transactions.GetByUserAsync(userId);
 
         // === AGENT 2: Financial Advisor (LLM, controlled input) ===
-        var answer = await _ai.QueryAsync(request.Question, summary, alerts);
+        var answer = await _ai.QueryAsync(request.Question, summary, alerts, recentTransactions);
 
         return Ok(new AgentResponse
         {
