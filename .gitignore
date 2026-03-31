@@ -1,0 +1,23 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+appsettings.Development.json
+
+# Node
+node_modules/
+dist/
+.env
+.env.local
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# EF Migrations (keep folder, ignore generated)
+# EF Migrations (ignore generated files)
+src/Infrastructure/Data/Migrations/*.cs
+!src/Infrastructure/Data/Migrations/
+!src/Infrastructure/Data/Migrations/.gitkeep
