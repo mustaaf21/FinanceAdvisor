@@ -86,6 +86,8 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     localStorage.removeItem('sessionId')
+    sessionStorage.removeItem('chatMessages')
+    sessionStorage.removeItem('lastResult')
     setUser(null)
   }
 
@@ -103,10 +105,10 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      login, 
-      logout, 
+    <AuthContext.Provider value={{
+      user,
+      login,
+      logout,
       isAuthenticated: !!user,
       showSessionAlert,
       forceLogoutOtherSession,

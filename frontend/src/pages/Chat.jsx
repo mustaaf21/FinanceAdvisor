@@ -12,20 +12,39 @@ const SUGGESTED = [
 const SeverityDot = { High: 'bg-red-400', Medium: 'bg-yellow-400', Low: 'bg-blue-400' }
 
 export default function Chat() {
-  const [messages, setMessages] = useState([
-    {
-      role: 'assistant',
-      content: "Hi! I'm your AI financial advisor. I've analysed your spending data and I'm ready to help. Ask me anything about your finances.",
-      alerts: []
-    }
-  ])
+  const [messages, setMessages] = useState(() => {
+    const stored = sessionStorage.getItem('chatMessages')
+    return stored
+      ? JSON.parse(stored)
+      : [
+        {
+          role: 'assistant',
+          content: "Hi! I'm your AI financial advisor. I've analysed your spending data and I'm ready to help.",
+          alerts: []
+        }
+      ]
+  })
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef(null)
+  const [lastResult, setLastResult] = useState(() => {
+    const stored = sessionStorage.getItem('lastResult')
+    return stored ? JSON.parse(stored) : null
+  })
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  useEffect(() => {
+    sessionStorage.setItem('chatMessages', JSON.stringify(messages))
+  }, [messages])
+
+  useEffect(() => {
+    if (lastResult) {
+      sessionStorage.setItem('lastResult', JSON.stringify(lastResult))
+    }
+  }, [lastResult])
 
   const send = async (question) => {
     if (!question.trim() || loading) return
@@ -48,8 +67,12 @@ export default function Chat() {
     setLoading(true)
 
     try {
-      const res = await agentApi.query(question, history)
-      const { answer, alerts } = res.data
+      const res = await agentApi.query(question, history, lastResult)
+      const { answer, alerts, data } = res.data
+      // store last filtered result
+      if (data) {
+        setLastResult(data)
+      }
       setMessages(m => [...m, { role: 'assistant', content: answer, alerts }])
     } catch {
       setMessages(m => [...m, {
