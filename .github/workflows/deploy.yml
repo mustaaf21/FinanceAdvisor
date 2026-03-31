@@ -22,5 +22,7 @@ jobs:
           script: |
             cd ~/FinanceAdvisor
             git pull origin main
-            docker-compose down
-            docker-compose up -d --build
+            docker-compose down --remove-orphans
+            docker image prune -af
+            docker builder prune -af
+            docker-compose up -d --build --force-recreate

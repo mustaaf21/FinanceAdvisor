@@ -38,10 +38,12 @@ public class AuthService : IAuthService
             .Where(s => s.IsActive && s.LastActivityAt > DateTime.UtcNow.AddMinutes(-5))
             .ToList();
 
+        var token = GenerateJwt(user.Id, user.Email);
+
         if (activeSessions.Any() && !request.ForceLogoutOthers)
         {
             // Return response indicating active session exists
-            return new LoginResponse("", user.FullName, user.Email, true, activeSessions.First().SessionToken);
+            return new LoginResponse(token, user.FullName, user.Email, true, activeSessions.First().SessionToken);
         }
 
         // Force logout other sessions if requested
@@ -54,7 +56,6 @@ public class AuthService : IAuthService
         }
 
         // Create new session
-        var token = GenerateJwt(user.Id, user.Email);
         var sessionToken = Guid.NewGuid().ToString();
         
         var newSession = new Domain.Entities.UserSession

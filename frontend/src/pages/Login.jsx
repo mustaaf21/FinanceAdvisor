@@ -18,7 +18,7 @@ export default function Login() {
     setLoading(true)
     try {
       const result = await login(form.email, form.password)
-      if (!result?.hasActiveSession) {
+      if (result) {
         navigate('/')
       }
     } catch {
