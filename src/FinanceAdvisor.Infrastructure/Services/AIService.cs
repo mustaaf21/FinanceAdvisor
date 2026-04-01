@@ -68,17 +68,16 @@ public class AIService : IAIService
             - You can answer questions about latest transactions, specific amounts, and filtering
             - When showing transaction details, format them clearly with amount, category, and description
             
-            USER QUESTION: {userQuestion}
-
-            USER SPENDING DATA:
-            {context}
-
             CHAT HISTORY:
             {historyText}
 
             LAST REFERENCED RESULT:
             {lastResultText}
 
+            USER QUESTION: {userQuestion}
+
+            USER SPENDING DATA:
+            {context}
             
             Respond as a helpful, professional advisor:
             """;
