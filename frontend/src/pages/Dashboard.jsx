@@ -119,9 +119,14 @@ export default function Dashboard() {
                 tickFormatter={v => `₹${(v / 1000).toFixed(0)}k`}
               />
               <Tooltip
-                contentStyle={{ background: '#ffffff', border: '1px solid #ffffff', borderRadius: 8 }}
-                labelStyle={{ color: '#ffffff' }}
-                formatter={v => [`₹${v.toLocaleString('en-IN')}`, 'Spent']}
+                contentStyle={{
+                  backgroundColor: '#111827',
+                  border: '1px solid #1f2937',
+                  borderRadius: 8
+                }}
+                labelStyle={{ color: '#9ca3af' }}
+                itemStyle={{ color: '#ffffff' }}
+                formatter={(v) => [`₹${v.toLocaleString('en-IN')}`, 'Spent']}
               />
               <Bar dataKey="value" radius={[6, 6, 0, 0]}>
                 {chartData.map((entry, i) => (
