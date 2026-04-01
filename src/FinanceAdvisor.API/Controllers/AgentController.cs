@@ -47,7 +47,14 @@ public class AgentController : ControllerBase
         var recentTransactions = await _transactions.GetByUserAsync(userId);
 
         // === AGENT 2: Financial Advisor (LLM, controlled input) ===
-        var answer = await _ai.QueryAsync(request.Question, summary, alerts, recentTransactions);
+        var answer = await _ai.QueryAsync(
+                            request.Question,
+                            summary,
+                            alerts,
+                            recentTransactions,
+                            request.History,
+                            request.LastResult
+                        );
 
         return Ok(new AgentResponse
         {

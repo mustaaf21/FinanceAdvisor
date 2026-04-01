@@ -58,7 +58,7 @@ export const insightsApi = {
   get: () => api.get('/insights')
 }
 
-// 🔥 FIX: pass history properly
+// pass history properly
 export const agentApi = {
   query: (question, history = [], lastResult = null) =>
     api.post('/agent/query', { question, history, lastResult })

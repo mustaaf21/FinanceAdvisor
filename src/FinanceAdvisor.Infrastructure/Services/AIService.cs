@@ -20,7 +20,10 @@ public class AIService : IAIService
         string userQuestion,
         InsightsSummary insights,
         List<RuleAlert> alerts,
-        List<TransactionDto> recentTransactions)
+        List<TransactionDto> recentTransactions,
+        List<ChatMessage>? history,
+        object? lastResult
+    )
     {
         // Key architectural decision: LLM receives ONLY validated structured JSON
         // It never accesses raw transactions or the database directly
@@ -33,7 +36,7 @@ public class AIService : IAIService
             total_spent_last_month = insights.TotalLastMonth,
             highest_spend_category = insights.TopCategory,
             active_alerts = alerts.Select(a => new { a.Category, a.Message, severity = a.Severity.ToString() }),
-            recent_transactions = recentTransactions.Take(10).Select(t => new 
+            recent_transactions = recentTransactions.Take(10).Select(t => new
             {
                 amount = t.Amount,
                 category = t.Category,
@@ -42,6 +45,14 @@ public class AIService : IAIService
                 is_recurring = t.IsRecurring
             })
         }, new JsonSerializerOptions { WriteIndented = true });
+
+        var historyText = history != null && history.Any()
+            ? string.Join("\n", history.Select(h => $"{h.Role.ToUpper()}: {h.Content}"))
+            : "No prior conversation.";
+
+        var lastResultText = lastResult != null
+            ? JsonSerializer.Serialize(lastResult, new JsonSerializerOptions { WriteIndented = true })
+            : "None";
 
         var prompt = $"""
             You are a professional financial advisor AI assistant. 
@@ -57,6 +68,12 @@ public class AIService : IAIService
             - You can answer questions about latest transactions, specific amounts, and filtering
             - When showing transaction details, format them clearly with amount, category, and description
             
+            CHAT HISTORY:
+            {historyText}
+
+            LAST REFERENCED RESULT:
+            {lastResultText}
+
             USER SPENDING DATA:
             {context}
             

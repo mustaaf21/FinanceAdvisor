@@ -25,9 +25,15 @@ public interface IRulesEngineService
 
 public interface IAIService
 {
-    Task<string> QueryAsync(string userQuestion, InsightsSummary insights, List<RuleAlert> alerts, List<TransactionDto> recentTransactions);
+    Task<string> QueryAsync(
+        string userQuestion,
+        InsightsSummary insights,
+        List<RuleAlert> alerts,
+        List<TransactionDto> recentTransactions,
+        List<ChatMessage>? history,
+        object? lastResult
+    );
 }
-
 public interface IAuthService
 {
     Task<LoginResponse?> LoginAsync(LoginRequest request);

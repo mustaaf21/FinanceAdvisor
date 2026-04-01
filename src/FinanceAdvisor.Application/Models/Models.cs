@@ -37,7 +37,15 @@ public enum Severity
 
 public class AIQueryRequest
 {
-    public string Question { get; set; } = string.Empty;
+    public string Question { get; set; } = default!;
+    public List<ChatMessage>? History { get; set; }
+    public object? LastResult { get; set; }
+}
+
+public class ChatMessage
+{
+    public string Role { get; set; } = default!;
+    public string Content { get; set; } = default!;
 }
 
 public class AgentResponse
