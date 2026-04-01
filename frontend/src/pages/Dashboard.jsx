@@ -149,8 +149,11 @@ export default function Dashboard() {
                 tickFormatter={v => `₹${(v / 1000).toFixed(0)}k`}
               />
 
-              {/* ✅ FIXED TOOLTIP */}
-              <Tooltip content={<CustomTooltip />} />
+              {/*FIXED TOOLTIP */}
+              <Tooltip
+                content={<CustomTooltip />}
+                wrapperStyle={{ background: 'transparent' }}
+              />
 
               <Bar dataKey="value" radius={[6, 6, 0, 0]}>
                 {chartData.map((entry, i) => (
@@ -213,9 +216,18 @@ function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null
 
   return (
-    <div className="bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 shadow-lg">
-      <p className="text-gray-400 text-xs">{label}</p>
-      <p className="text-white text-sm font-medium">
+    <div
+      style={{
+        backgroundColor: '#111827',
+        border: '1px solid #1f2937',
+        borderRadius: '8px',
+        padding: '8px 12px',
+        color: 'white',
+        boxShadow: '0 10px 25px rgba(0,0,0,0.4)'
+      }}
+    >
+      <p style={{ color: '#9ca3af', margin: 0 }}>{label}</p>
+      <p style={{ margin: 0 }}>
         Spent: ₹{payload[0].value.toLocaleString('en-IN')}
       </p>
     </div>

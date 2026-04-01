@@ -35,7 +35,7 @@ export function AuthProvider({ children }) {
     if (!user) return
 
     // Track user activity
-    const events = ['mousedown', 'keydown', 'scroll', 'touchstart']
+    const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'userActivity']
     events.forEach(event => {
       window.addEventListener(event, resetIdleTimer)
     })

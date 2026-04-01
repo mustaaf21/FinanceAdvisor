@@ -5,14 +5,25 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' }
 })
 
-// Attach JWT token to every request
+// Attach JWT token + track activity
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('token')
-  if (token) config.headers.Authorization = `Bearer ${token}`
+  const sessionId = localStorage.getItem('sessionId')
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+
+  if (sessionId) {
+    config.headers["X-Session-Id"] = sessionId
+  }
+
+  window.dispatchEvent(new Event('userActivity'))
+
   return config
 })
 
-// Auto-logout on 401
+// Handle 401 (no forced logout)
 api.interceptors.response.use(
   res => res,
   err => {
@@ -24,9 +35,14 @@ api.interceptors.response.use(
 )
 
 export const authApi = {
-  login: (email, password, forceLogoutOthers = false) => api.post('/auth/login', { email, password, forceLogoutOthers }),
-  checkSession: (email) => api.post('/auth/check-session', { email }),
-  logoutSession: (sessionId) => api.post(`/auth/logout-session?sessionId=${sessionId}`)
+  login: (email, password, forceLogoutOthers = false) =>
+    api.post('/auth/login', { email, password, forceLogoutOthers }),
+
+  checkSession: (email) =>
+    api.post('/auth/check-session', { email }),
+
+  logoutSession: (sessionId) =>
+    api.post(`/auth/logout-session?sessionId=${sessionId}`)
 }
 
 export const transactionsApi = {
@@ -34,15 +50,18 @@ export const transactionsApi = {
   add: (data) => api.post('/transactions', data),
   update: (id, data) => api.put(`/transactions/${id}`, data),
   getLatest: () => api.get('/transactions/latest'),
-  getByAmount: (minAmount, maxAmount) => api.get('/transactions/by-amount', { params: { minAmount, maxAmount } })
+  getByAmount: (minAmount, maxAmount) =>
+    api.get('/transactions/by-amount', { params: { minAmount, maxAmount } })
 }
 
 export const insightsApi = {
   get: () => api.get('/insights')
 }
 
+// 🔥 FIX: pass history properly
 export const agentApi = {
-  query: (question) => api.post('/agent/query', { question, history })
+  query: (question, history = [], lastResult = null) =>
+    api.post('/agent/query', { question, history, lastResult })
 }
 
 export default api
