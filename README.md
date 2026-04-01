@@ -1,227 +1,211 @@
+# 💰 FinanceAdvisor — AI-Powered Personal Finance System
 
-# 🚀 Finance Advisor — AI-Powered Personal Finance System
-
-A full-stack AI-powered personal finance advisor built with **.NET 8 + React**, featuring a **two-agent architecture** for accurate financial insights and real-time AI-driven recommendations.
-
----
-
-# 🧠 Key Features
-
-* 📊 Analyze transaction data and spending patterns
-* 🤖 AI-powered financial insights using Groq (LLaMA-3)
-* ⚙️ Two-agent architecture (deterministic + AI separation)
-* 🔐 JWT-based authentication
-* 📈 Interactive dashboards with charts
-* ☁️ Fully deployed on AWS with CI/CD
+> A full-stack AI-powered personal finance application built with **.NET 8 + React (Vite)**, featuring a **two-agent architecture** that separates deterministic financial logic from LLM-driven insights — deployed end-to-end on AWS at **zero cost**.
 
 ---
 
-# 🏗️ Architecture
+## 🌐 Live Deployment
+
+| Component | Service |
+|-----------|---------|
+| Frontend | React (Vite) + Nginx · Docker on **AWS EC2** |
+| Backend | ASP.NET Core (.NET 8) · Docker on **AWS EC2** |
+| Database | **Amazon RDS** (PostgreSQL) |
+| AI Engine | **Groq API** (LLaMA-3) |
+| CI/CD | **GitHub Actions** → SSH → EC2 → Docker Rebuild |
+
+> ✅ Fully automated deployment — every `git push` to `main` triggers a rebuild and goes live.
+
+---
+
+## 🧠 What It Does
+
+- 📊 Ingests and categorises transaction data
+- 🔍 Detects spending patterns using a deterministic rules engine
+- 🤖 Generates human-readable financial insights via Groq LLaMA-3
+- 📈 Displays interactive dashboards with charts
+- 🔐 Protects all routes via JWT authentication
+
+---
+
+## 🏗️ Architecture
 
 ```
 React (Vite)
-     ↓
-nginx (Docker)
-     ↓
+     │
+  nginx (Docker)
+     │
 ASP.NET Core API (.NET 8)
-     ↓
-Agent Layer
-   ├── Agent 1: RulesEngine + Insights (Deterministic)
-   └── Agent 2: AIService (Groq LLM)
-     ↓
-PostgreSQL (AWS RDS)
+     │
+  ┌──┴──────────────────────────┐
+  │           Agent Layer        │
+  │  Agent 1 — Rules Engine      │  ← Deterministic: aggregates data, applies rules
+  │  Agent 2 — AI Advisor (Groq) │  ← Receives structured JSON, generates insights
+  └──────────────────────────────┘
+     │
+PostgreSQL (Amazon RDS)
 ```
 
----
+### Why Two Agents?
 
-# ⚙️ Tech Stack
+Most AI finance apps pass raw user data directly to an LLM — which leads to hallucinated numbers. This system separates concerns:
 
-| Layer    | Technology                 |
-| -------- | -------------------------- |
-| Frontend | React (Vite), Tailwind CSS |
-| Backend  | ASP.NET Core (.NET 8)      |
-| ORM      | Entity Framework Core      |
-| Database | PostgreSQL (AWS RDS)       |
-| AI       | Groq API (LLaMA-3)         |
-| Auth     | JWT Authentication         |
-| DevOps   | Docker, GitHub Actions     |
-| Hosting  | AWS EC2                    |
+- **Agent 1** handles all arithmetic, aggregation, and rule logic deterministically.
+- **Agent 2** receives only pre-validated, structured JSON. It never touches raw data or performs calculations — it only interprets and explains.
+
+This guarantees **accuracy in financial figures** while still producing natural-language insights.
 
 ---
 
-# 🧱 Project Structure
+## ⚙️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18, Vite, Tailwind CSS |
+| Backend | ASP.NET Core (.NET 8), C# |
+| ORM | Entity Framework Core |
+| Database | PostgreSQL (Amazon RDS — Free Tier) |
+| AI | Groq API (LLaMA-3) |
+| Auth | JWT Bearer Authentication |
+| Containerisation | Docker, Docker Compose |
+| CI/CD | GitHub Actions |
+| Hosting | Amazon EC2 (Free Tier) |
+| Secrets | `.env` file on EC2 (not committed) |
+
+---
+
+## 📁 Project Structure
 
 ```
 FinanceAdvisor/
-├── frontend/                 # React app
-├── src/                      # .NET backend (Clean Architecture)
-├── docker-compose.yml        # Container orchestration
-├── Dockerfile                # Backend Dockerfile
-├── .env                      # Environment variables (not committed)
+├── .github/
+│   └── workflows/
+│       └── deploy.yml          # GitHub Actions CI/CD pipeline
+├── frontend/                   # React + Vite app
+│   ├── src/
+│   └── Dockerfile              # Nginx-based production build
+├── src/                        # .NET 8 backend (Clean Architecture)
+│   ├── FinanceAdvisor.API/     # Controllers, Middleware, DI
+│   ├── FinanceAdvisor.Application/  # Services, Agent logic
+│   ├── FinanceAdvisor.Domain/  # Entities, Interfaces
+│   └── FinanceAdvisor.Infrastructure/  # EF Core, Groq client, Repos
+├── docker-compose.yml          # Orchestrates backend + frontend
+├── Dockerfile                  # Backend multi-stage build
+├── FinanceAdvisor.sln
+├── setup.sh                    # Linux setup script
+├── setup.bat                   # Windows setup script
+└── .env                        # Secrets (on EC2 only — never committed)
 ```
 
 ---
 
-# 🚀 Deployment
+## 🚀 CI/CD Pipeline
 
-## 🐳 AWS EC2 (Docker + CI/CD)
+```
+git push → GitHub Actions → SSH into EC2 → git pull → docker-compose up --build
+```
 
-| Component | Service                   |
-| --------- | ------------------------- |
-| Frontend  | nginx (Docker)            |
-| Backend   | ASP.NET Core API (Docker) |
-| Database  | AWS RDS (PostgreSQL)      |
-| CI/CD     | GitHub Actions            |
-| Hosting   | Amazon EC2                |
+- **Zero manual steps** after initial EC2 setup
+- Secrets managed via `.env` file on the EC2 instance (not in GitHub)
+- GitHub Actions uses SSH key stored as a repository secret
 
 ---
 
-## ⚙️ Deployment Flow
+## 🔐 Environment Variables
 
+Stored in a `.env` file on the EC2 instance. **Never committed to source control.**
+
+```env
+ConnectionStrings__DefaultConnection=Host=<rds-endpoint>;Database=financeadvisor;Username=...;Password=...
+GROQ_API_KEY=your_groq_api_key
+JWT_SECRET=your_jwt_secret_key
+ALLOWED_USER_EMAIL=your@email.com
 ```
-Git Push → GitHub Actions → EC2 → Docker Rebuild → App Live
-```
 
-✔ Fully automated deployment pipeline
-✔ Zero manual intervention after setup
+The `docker-compose.yml` loads this file automatically:
 
----
-
-# 🔐 Environment Variables
-
-Stored securely in `.env` (not committed):
-
-```
-ConnectionStrings__DefaultConnection=...
-GROQ_API_KEY=...
-JWT_SECRET=...
-ALLOWED_USER_EMAIL=...
+```yaml
+env_file:
+  - .env
 ```
 
 ---
 
-# 🧪 Local Setup
+## 💻 Local Development Setup
 
 ### Prerequisites
 
-* .NET 8 SDK
-* Node.js 18+
-* PostgreSQL
-* Groq API Key
+- [.NET 8 SDK](https://dotnet.microsoft.com/download)
+- [Node.js 18+](https://nodejs.org)
+- PostgreSQL (local or Docker)
+- [Groq API Key](https://console.groq.com) (free)
 
----
-
-### Run Backend
+### Run the Backend
 
 ```bash
+# Set environment variables (local)
+export GROQ_API_KEY=your_key
+export JWT_SECRET=your_secret
+export ConnectionStrings__DefaultConnection="Host=localhost;..."
+
 dotnet run --project src/FinanceAdvisor.API
+# API available at: http://localhost:5000
 ```
 
----
-
-### Run Frontend
+### Run the Frontend
 
 ```bash
 cd frontend
 npm install
 npm run dev
+# App available at: http://localhost:5173
 ```
 
 ---
 
-# 🐳 Docker Setup
+## 🐳 Docker (Full Stack)
 
 ```bash
+# Create .env file first (see Environment Variables section)
 docker-compose up --build
 ```
 
-Access:
-
-```
-http://localhost
-```
+Access the app at `http://localhost`.
 
 ---
 
-# 🔐 Authentication
+## 🔐 Authentication
 
-* JWT-based authentication
-* Token stored in localStorage
-* Optional single-user restriction via environment variable
-
----
-
-# 🤖 AI Design (Key Highlight)
-
-### Two-Agent System
-
-**Agent 1 (Deterministic Engine)**
-
-* Aggregates financial data
-* Applies rules and calculations
-* Ensures accuracy
-
-**Agent 2 (AI Advisor)**
-
-* Receives structured JSON only
-* Generates human-like insights
-* Prevents hallucination of numbers
+- JWT Bearer tokens issued on login
+- Token stored in `localStorage` on the client
+- All API endpoints are protected via `[Authorize]`
+- Optional single-user restriction via `ALLOWED_USER_EMAIL` env var
 
 ---
 
-# ⚡ CI/CD (GitHub Actions)
+## 🤖 AI Integration Detail
 
-Automatically deploys on every push:
+The Groq LLaMA-3 model is called by **Agent 2** only after Agent 1 has:
 
-```yaml
-GitHub → SSH → EC2 → Docker Rebuild
-```
+1. Aggregated all transactions by category and time period
+2. Computed totals, averages, and deltas deterministically
+3. Serialised the result as structured JSON
 
----
-
-# 🔒 Security
-
-* Secrets not committed (`.env`)
-* HTTPS ready (via Nginx + Certbot)
-* JWT authentication
-* API routing via reverse proxy
+The LLM prompt explicitly instructs the model not to perform any arithmetic — it only interprets the pre-computed data. This design pattern prevents the most common failure mode in AI finance tools: **hallucinated numbers**.
 
 ---
 
-# 📌 Future Improvements
+## ☁️ AWS Free Tier Cost Breakdown
 
-* 🔐 HTTPS with custom domain
-* 📊 Monitoring (Grafana + Prometheus)
-* ⚡ Zero-downtime deployments
-* 📈 Advanced analytics dashboards
-* 🧠 Multi-user support
+| Service | Tier Used | Monthly Cost |
+|---------|-----------|-------------|
+| EC2 (t2.micro) | Free Tier (750 hrs/mo) | $0 |
+| RDS PostgreSQL (db.t3.micro) | Free Tier (750 hrs/mo) | $0 |
+| Groq API | Free Plan | $0 |
+| GitHub Actions | Free Plan (2000 min/mo) | $0 |
+| **Total** | | **$0** |
+
 
 ---
 
-# 🎯 Why This Project Stands Out
-
-* Clean Architecture with strict separation of concerns
-* Real-world AI integration (not just API calls)
-* Full DevOps pipeline (Docker + CI/CD)
-* Production-ready cloud deployment
-* Strong focus on correctness in financial systems
-
----
-
-# 👨‍💻 Author
-
-**Mustafeez Khan**
-
-* 💼 Full-stack .NET Developer
-* 🤖 AI + Backend Systems
-* ☁️ Cloud & DevOps Enthusiast
-
----
-
-# ⭐ If you like this project
-
-Give it a ⭐ — it helps!
-
----
-
-
+> ⭐ If this project helped you or you found it interesting, drop a star — it's appreciated!
