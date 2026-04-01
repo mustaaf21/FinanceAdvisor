@@ -70,14 +70,15 @@ public class AIService : IAIService
             
             USER QUESTION: {userQuestion}
 
+            USER SPENDING DATA:
+            {context}
+
             CHAT HISTORY:
             {historyText}
 
             LAST REFERENCED RESULT:
             {lastResultText}
 
-            USER SPENDING DATA:
-            {context}
             
             Respond as a helpful, professional advisor:
             """;
