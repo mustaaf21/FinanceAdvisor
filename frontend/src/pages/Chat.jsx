@@ -56,7 +56,7 @@ export default function Chat() {
 
     // Only send role + content (no alerts) with limit to prevent token overload
     const history = updatedMessages
-      .slice(-10)
+      .slice(-6)
       .map(m => ({
         role: m.role,
         content: m.content
