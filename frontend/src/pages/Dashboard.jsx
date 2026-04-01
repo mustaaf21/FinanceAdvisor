@@ -119,8 +119,8 @@ export default function Dashboard() {
                 tickFormatter={v => `₹${(v / 1000).toFixed(0)}k`}
               />
               <Tooltip
-                contentStyle={{ background: '#111827', border: '1px solid #1f2937', borderRadius: 8 }}
-                labelStyle={{ color: '#f9fafb' }}
+                contentStyle={{ background: '#ffffff', border: '1px solid #ffffff', borderRadius: 8 }}
+                labelStyle={{ color: '#ffffff' }}
                 formatter={v => [`₹${v.toLocaleString('en-IN')}`, 'Spent']}
               />
               <Bar dataKey="value" radius={[6, 6, 0, 0]}>
@@ -152,9 +152,8 @@ export default function Dashboard() {
                 <div className="flex items-center gap-6">
                   <span className="text-gray-500 text-xs">₹{prev.toLocaleString('en-IN')}</span>
                   <span className="text-white font-medium">₹{current.toLocaleString('en-IN')}</span>
-                  <span className={`flex items-center gap-1 text-xs font-medium w-16 justify-end ${
-                    delta > 0 ? 'text-red-400' : 'text-green-400'
-                  }`}>
+                  <span className={`flex items-center gap-1 text-xs font-medium w-16 justify-end ${delta > 0 ? 'text-red-400' : 'text-green-400'
+                    }`}>
                     {delta > 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
                     {Math.abs(delta)}%
                   </span>
