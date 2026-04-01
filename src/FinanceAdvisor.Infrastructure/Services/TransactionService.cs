@@ -20,7 +20,7 @@ public class TransactionService : ITransactionService
     {
         return await _db.Transactions
             .Where(t => t.UserId == userId)
-            .OrderByDescending(t => t.Date).ThenByDescending(t => t.Date)
+            .OrderByDescending(t => t.Date).ThenByDescending(t => t.Id)
             .Select(t => new TransactionDto(
                 t.Id,
                 t.Amount,
@@ -93,7 +93,7 @@ public class TransactionService : ITransactionService
     {
         var transaction = await _db.Transactions
             .Where(t => t.UserId == userId)
-            .OrderByDescending(t => t.Date).ThenByDescending(t => t.Date)
+            .OrderByDescending(t => t.Date).ThenByDescending(t => t.Id)
             .FirstOrDefaultAsync();
 
         if (transaction == null) return null;
@@ -117,7 +117,7 @@ public class TransactionService : ITransactionService
             query = query.Where(t => t.Amount <= maxAmount.Value);
 
         return await query
-            .OrderByDescending(t => t.Date).ThenByDescending(t => t.Date)
+            .OrderByDescending(t => t.Date).ThenByDescending(t => t.Id)
             .Select(t => new TransactionDto(
                 t.Id,
                 t.Amount,
