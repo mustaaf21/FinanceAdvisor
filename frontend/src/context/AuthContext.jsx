@@ -43,6 +43,13 @@ export function AuthProvider({ children }) {
     // Check idle timeout every 30 seconds
     idleTimerRef.current = setInterval(checkIdleTimeout, 30000)
 
+    // Listen for session expired event from API interceptor
+    const handleSessionExpired = () => {
+      setUser(null)
+      alert('Your session was logged out from another device')
+    }
+    window.addEventListener('sessionExpired', handleSessionExpired)
+
     return () => {
       events.forEach(event => {
         window.removeEventListener(event, resetIdleTimer)
@@ -50,6 +57,7 @@ export function AuthProvider({ children }) {
       if (idleTimerRef.current) {
         clearInterval(idleTimerRef.current)
       }
+      window.removeEventListener('sessionExpired', handleSessionExpired)
     }
   }, [user])
 

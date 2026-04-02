@@ -29,14 +29,15 @@ api.interceptors.response.use(
   err => {
     if (err.response?.status === 401) {
       const message = err.response?.data?.message
-      if (message && (message.includes('Session') || message.includes('expired') || message.includes('invalid'))) {
-        // Session was force logged out or expired
+      if (message && (message.includes('Session') || message.includes('expired') || message.includes('invalid') || message.includes('timed out'))) {
+        // Session was force logged out or expired - clear storage
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         localStorage.removeItem('sessionId')
         sessionStorage.removeItem('chatMessages')
         sessionStorage.removeItem('lastResult')
-        window.location.href = '/login'
+        // Trigger a custom event that AuthContext can listen to
+        window.dispatchEvent(new CustomEvent('sessionExpired'))
       }
     }
     return Promise.reject(err)
