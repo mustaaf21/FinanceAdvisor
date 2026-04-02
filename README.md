@@ -355,6 +355,8 @@ npm run dev
 - **Backend API:** http://localhost:8080
 - **Swagger Docs:** http://localhost:8080/swagger
 
+
+
 ---
 
 ## 🐳 Docker Deployment (Full Stack)
@@ -468,8 +470,11 @@ The AI Financial Advisor understands natural language queries about your finance
 ### Session Management
 - **Concurrent login detection** — alerts when multiple sessions exist
 - **5-minute idle timeout** — automatic logout after inactivity
-- **Session invalidation** — ability to force logout other sessions
+- **Real-time force logout** — immediately invalidates other sessions when user forces logout
+- **Session validation middleware** — validates session on every API request
+- **Automatic session termination** — logged-out users are kicked out on their next API call
 - **Activity tracking** — updates last activity timestamp on each request
+- **Custom event handling** — graceful logout with user notification
 
 ### Data Protection
 - **CORS restrictions** — only allowed origins can access API
@@ -664,6 +669,7 @@ Contributions, issues, and feature requests are welcome!
 
 If this project helped you or you found it interesting, please give it a ⭐️!
 
+
 ---
 
-**Built using .NET 8, React, PostgreSQL, and Groq AI**
+**Built with ❤️ using .NET 8, React, PostgreSQL, and Groq AI**
