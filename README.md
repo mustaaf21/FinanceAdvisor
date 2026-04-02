@@ -666,13 +666,4 @@ If this project helped you or you found it interesting, please give it a ⭐️!
 
 ---
 
-## 🙏 Acknowledgments
-
-- **Groq** for providing free LLaMA-3 API access
-- **AWS** for generous Free Tier offerings
-- **Microsoft** for .NET 8 and excellent documentation
-- **React** and **Vite** communities for amazing tools
-
----
-
 **Built using .NET 8, React, PostgreSQL, and Groq AI**
