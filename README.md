@@ -6,7 +6,7 @@
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://reactjs.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-RDS-336791?logo=postgresql)](https://aws.amazon.com/rds/)
 [![AWS](https://img.shields.io/badge/AWS-EC2-FF9900?logo=amazon-aws)](https://aws.amazon.com/ec2/)
-[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Docker](https://img.shields.io/badge/Docker-Containerize-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 
 ---
 
@@ -641,7 +641,7 @@ npm install
 
 ## 📝 License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is open source
 
 ---
 
