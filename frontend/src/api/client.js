@@ -23,12 +23,21 @@ api.interceptors.request.use(config => {
   return config
 })
 
-// Handle 401 (no forced logout)
+// Handle 401 (session expired or invalid)
 api.interceptors.response.use(
   res => res,
   err => {
     if (err.response?.status === 401) {
-      console.error("Unauthorized request", err.config.url)
+      const message = err.response?.data?.message
+      if (message && (message.includes('Session') || message.includes('expired') || message.includes('invalid'))) {
+        // Session was force logged out or expired
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        localStorage.removeItem('sessionId')
+        sessionStorage.removeItem('chatMessages')
+        sessionStorage.removeItem('lastResult')
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(err)
   }

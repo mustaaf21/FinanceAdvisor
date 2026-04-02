@@ -96,6 +96,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseCors("ReactApp");
 app.UseAuthentication();
+app.UseMiddleware<SessionValidationMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 
