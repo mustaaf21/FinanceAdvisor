@@ -1,27 +1,52 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
+
+
   <PropertyGroup>
+
     <TargetFramework>net8.0</TargetFramework>
+
     <Nullable>enable</Nullable>
+
     <ImplicitUsings>enable</ImplicitUsings>
+
     <RootNamespace>FinanceAdvisor.API</RootNamespace>
+
     <UserSecretsId>912f7099-cd52-4faf-95d1-2b7d3b26d36f</UserSecretsId>
+
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FinanceAdvisor.Application\FinanceAdvisor.Application.csproj" />
-    <ProjectReference Include="..\FinanceAdvisor.Infrastructure\FinanceAdvisor.Infrastructure.csproj" />
-  </ItemGroup>
+
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+
+    <ProjectReference Include="..\FinanceAdvisor.Application\FinanceAdvisor.Application.csproj" />
+
+    <ProjectReference Include="..\FinanceAdvisor.Infrastructure\FinanceAdvisor.Infrastructure.csproj" />
+
   </ItemGroup>
+
+
+
+  <ItemGroup>
+
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+
+      <PrivateAssets>all</PrivateAssets>
+
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+
+    </PackageReference>
+
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+
+  </ItemGroup>
+
+
 
 </Project>
+

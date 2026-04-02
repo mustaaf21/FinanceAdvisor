@@ -1,26 +1,50 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+
+
   <PropertyGroup>
+
     <TargetFramework>net8.0</TargetFramework>
+
     <ImplicitUsings>enable</ImplicitUsings>
+
     <Nullable>enable</Nullable>
+
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FinanceAdvisor.Application\FinanceAdvisor.Application.csproj" />
-    <ProjectReference Include="..\FinanceAdvisor.Domain\FinanceAdvisor.Domain.csproj" />
-  </ItemGroup>
+
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.0.3" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
+
+    <ProjectReference Include="..\FinanceAdvisor.Application\FinanceAdvisor.Application.csproj" />
+
+    <ProjectReference Include="..\FinanceAdvisor.Domain\FinanceAdvisor.Domain.csproj" />
+
   </ItemGroup>
+
+
+
+  <ItemGroup>
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+
+      <PrivateAssets>all</PrivateAssets>
+
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+
+    </PackageReference>
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.0.3" />
+
+  </ItemGroup>
+
+
 
 </Project>
+
