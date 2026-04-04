@@ -663,7 +663,7 @@ Contributions, issues, and feature requests are welcome!
 
 - GitHub: [@mustaaf21](https://github.com/mustaaf21)
 - Repository: [FinanceAdvisor](https://github.com/mustaaf21/FinanceAdvisor)
-
+- Linkedin: [Mustafeez Khan](https://www.linkedin.com/in/mustafeezk)
 ---
 
 ## ⭐ Show Your Support
@@ -673,4 +673,4 @@ If this project helped you or you found it interesting, please give it a ⭐️!
 
 ---
 
-**Built with ❤️ using .NET 8, React, PostgreSQL, and Groq AI**
+**Built using .NET 8, React, PostgreSQL, and Groq AI**
