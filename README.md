@@ -664,6 +664,7 @@ Contributions, issues, and feature requests are welcome!
 - GitHub: [@mustaaf21](https://github.com/mustaaf21)
 - Repository: [FinanceAdvisor](https://github.com/mustaaf21/FinanceAdvisor)
 - Linkedin: [Mustafeez Khan](https://www.linkedin.com/in/mustafeezk)
+- Portfolio: [Mustafeez Khan](https://mustafeezportfolio.vercel.app/)
 ---
 
 ## ⭐ Show Your Support
